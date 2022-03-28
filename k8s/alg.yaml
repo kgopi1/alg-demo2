@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: alg
+spec: {}
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  namespace: alg
+  labels:
+    app: alg
+  name: alg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alg
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: alg
+    spec:
+      containers:
+        - image: kgopi1/alg-demo
+          name: container-alg
+          resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  namespace: alg
+  labels:
+    app: algsvc
+  name: algsvc
+spec:
+  ports:
+    - name: alg-port
+      port: 8080
+      protocol: TCP
+      targetPort: 3000
+      nodePort: 30150
+  selector:
+    app: alg
+  type: NodePort
+status:
+  loadBalancer: {}

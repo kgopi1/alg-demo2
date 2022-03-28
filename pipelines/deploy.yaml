@@ -1,0 +1,51 @@
+trigger:
+  - master
+
+pool: Azure Pipelines
+
+stages:
+  - stage: "DockerBuildandPush"
+    displayName: "Docker Build and Push"
+    jobs:
+      - job: "Install"
+        displayName: "Docker Build job"
+        steps:
+          - checkout: Self
+
+          - task: Bash@3
+            displayName: Get-Date-forTag
+            inputs:
+              targetType: "inline"
+              script: |
+                curdate=$(date +%d%m%g%H%M)
+                echo $curdate
+                echo "##vso[task.setvariable variable=tagdate;]$curdate"
+
+          - task: Docker@2
+            displayName: "Docker Login"
+            name: dockerlogin
+            inputs:
+              containerRegistry: "sc-docker"
+              command: login
+          - task: Docker@2
+            displayName: "Docker Build Task"
+            name: dockertask
+            inputs:
+              containerRegistry: "sc-docker"
+              repository: "kgopi1/alg-demo"
+              command: "buildAndPush"
+              Dockerfile: "../**/Dockerfile"
+              tags: |
+                $(tagdate)
+                latest
+  - stage: "Deploy-Dev"
+    displayName: Dev-Deployment
+    pool: az-selfhosted
+    jobs:
+      - job: devdeploy
+        displayName: Deploy-Dev
+        steps:
+          - task: Kubernetes@1
+            displayName: deploy-dev-k8s
+            inputs:
+              command:
