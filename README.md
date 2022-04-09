@@ -1,4 +1,15 @@
-# Introduction 
+# NODE Containersation 
+This repo contains node js app code , Dockerfile and Deployment steps . 
+
+This repo contains azure devops pipeline to build the image and deployment steps. 
+
+## How to use this repo. 
+
+1. Build the Dockerfile 
+2. Deploy the App in the Kubernetes. 
+
+
+
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
 # Getting Started

@@ -13,6 +13,14 @@ stages:
           - checkout: Self
 
           - task: Bash@3
+            displayName: Get-Branch-forTag
+            inputs:
+              targetType: "inline"
+              script: |
+                GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+                echo "##vso[task.setvariable variable=gittag;]$GIT_BRANCH"
+
+          - task: Bash@3
             displayName: Get-Date-forTag
             inputs:
               targetType: "inline"
@@ -38,6 +46,8 @@ stages:
               tags: |
                 $(tagdate)
                 latest
+                $(gittag)
+
   - stage: "Deploy-Dev"
     displayName: Dev-Deployment
     pool: az-selfhosted
